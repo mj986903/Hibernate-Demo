@@ -1,0 +1,63 @@
+1. Add dependencie :
+
+	<dependency>
+    	<groupId>org.hibernate.orm</groupId>
+    	<artifactId>hibernate-core</artifactId>
+    	<version>6.5.0.Final</version>
+	</dependency>
+	
+	
+2. Create hibernate.cfg.xml File :
+
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	<hibernate-configuration>
+	   <session-factory>
+	      <property name = "hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		  <property name = "hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+	      <property name = "hibernate.connection.url">jdbc:mysql://localhost:3306/database</property>
+	      <property name = "hibernate.connection.username">root</property>
+		  <property name = "hibernate.connection.password">password</property>
+	      <property name = "hbm2ddl.auto">update</property>
+	      <property name="show_sql">true</property>
+	   </session-factory>
+	</hibernate-configuration>
+	
+
+3. Steps to execute query's :
+
+	Configuration con = new Configuration().configure().addAnnotatedClass(Alien.class);
+	ServiceRegistry registery = new StandardServiceRegistryBuilder().applySettings(con.getProperties()).build();
+	SessionFactory sf = con.buildSessionFactory(registery);
+	Session s = sf.openSession();	
+	Transaction tx = s.beginTransaction();
+	// Do Database Task
+	tx.commit();
+	
+	
+4. Embeddable annotation class does not create new table but it create properties of embeddable class in the class 
+   where embeddable class is used as propertie.
+    
+   
+5. Association Mapping Like @OneToMany @ManyToOne And @ManyToMay Annotation create 2 extra table in database but actual 
+   use of only once therefore we stop it using set propertie of association mapping "mappedBy="class-name" 
+   
+   
+6. If Alien have more than one laptop that time :
+
+	Fetch Lazy : it fetch only require data for example if query fires for only alien and we don't use laptops that time 
+				 it does not fires query for laptop only fires query if we use laptops of that alien. 
+				 
+	Fetch Eager : it fetch all data if require or not for example if query fires for only alien that time eager also fire 
+				 query for laptops although its needed or not.
+				 
+				 
+7. Difference between get() and load() method
+	  I. Load does not fire query if the object is not used it only fires query when need of that object, But Get fires the 
+		 query if its needed or not.
+	 II. Get Method Every Time Hit Database but Load Method Hit Database Only If Object Is Used.
+	III. Get gives the object when Load gives the proxy object.
+	 IV. If Object is not present in database that time Get method gives Null Object but Load throw ObjectNotFoundException.
+	
